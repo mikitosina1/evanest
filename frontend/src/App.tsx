@@ -9,8 +9,13 @@ function App() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <h1>Posts</h1>
+      <div>
+        <form action="">
+
+        </form>
+      </div>
       <ul>
         {data.posts.map((post: { id: Key | null | undefined; title: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; content: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; created_at: string | number | Date; }) => (
           <li key={post.id}>
