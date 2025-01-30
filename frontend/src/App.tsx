@@ -1,30 +1,121 @@
-import { useQuery } from "@apollo/client";
-import { client, GET_POSTS } from "./apollo-client";
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import { useQuery, useMutation } from "@apollo/client";
+import { client, GET_POSTS, CREATE_POST, DELETE_POST, UPDATE_POST } from "./apollo-client";
+import { useState } from "react";
 
 function App() {
-  const { loading, error, data } = useQuery(GET_POSTS, { client });
+  const { loading, error, data, refetch } = useQuery(GET_POSTS, { client });
+
+  const [createPost] = useMutation(CREATE_POST, { onCompleted: () => refetch() });
+  const [deletePost] = useMutation(DELETE_POST, { onCompleted: () => refetch() });
+  const [updatePost] = useMutation(UPDATE_POST, { onCompleted: () => refetch() });
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [editingPostId, setEditingPostId] = useState<number | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const [editingContent, setEditingContent] = useState("");
+
+  const handleCreatePost = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title || !content) return;
+
+    // Создание нового поста с использованием DTO CreatePostInput
+    await createPost({
+      variables: {
+        input: {
+          title,
+          content
+        }
+      }
+    });
+    setTitle("");
+    setContent("");
+  };
+
+  const handleDeletePost = async (id: number) => {
+    await deletePost({ variables: { id } });
+  };
+
+  const handleEditPost = (post: { id: number; title: string; content: string }) => {
+    setEditingPostId(post.id);
+    setEditingTitle(post.title);
+    setEditingContent(post.content);
+  };
+
+  const handleUpdatePost = async () => {
+    if (editingPostId && editingTitle && editingContent) {
+      // Обновление поста с использованием DTO UpdatePostInput
+      await updatePost({
+        variables: {
+          input: {
+            id: editingPostId,
+            title: editingTitle,
+            content: editingContent
+          }
+        }
+      });
+      setEditingPostId(null);
+      setEditingTitle("");
+      setEditingContent("");
+    }
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <h1>Posts</h1>
-      <div>
-        <form action="">
+    <div className="container">
+      <h3 className="title">Posts</h3>
+      <form onSubmit={handleCreatePost} className="post-form">
+        <input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          className="input"
+        />
+        <textarea
+          placeholder="Content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          required
+          className="textarea"
+        />
+        <button type="submit" className="button">Create Post</button>
+      </form>
 
-        </form>
-      </div>
-      <ul>
-        {data.posts.map((post: { id: Key | null | undefined; title: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; content: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; created_at: string | number | Date; }) => (
-          <li key={post.id}>
-            <h2>{post.title}</h2>
-            <p>{post.content}</p>
-            <small>{new Date(post.created_at).toLocaleString()}</small>
-          </li>
-        ))}
-      </ul>
+      {data.posts.map((post) => (
+        <div key={post.id} className="post-card">
+          <div className="title-handler">
+            {editingPostId === post.id ? (
+              <>
+                <input
+                  type="text"
+                  value={editingTitle}
+                  onChange={(e) => setEditingTitle(e.target.value)}
+                  className="input"
+                />
+                <textarea
+                  value={editingContent}
+                  onChange={(e) => setEditingContent(e.target.value)}
+                  className="textarea"
+                />
+                <button onClick={handleUpdatePost} className="button">Save</button>
+                <button onClick={() => setEditingPostId(null)} className="button">Cancel</button>
+              </>
+            ) : (
+              <>
+                <h2 className="post-title">{post.title}</h2>
+                <small className="post-date">{new Date(post.created_at).toLocaleString()}</small>
+                <button onClick={() => handleDeletePost(post.id)} className="delete-button">Delete</button>
+                <button onClick={() => handleEditPost(post)} className="edit-button">Edit</button>
+              </>
+            )}
+          </div>
+          <p className="post-content">{post.content}</p>
+        </div>
+      ))}
     </div>
   );
 }

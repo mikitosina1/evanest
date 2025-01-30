@@ -20,5 +20,22 @@ type Query {
 }
 
 type Mutation {
-  createPost(title: String!, content: String!): Post!
+  createPost(input: CreatePostInput!): Post!
+  updatePost(input: UpdatePostInput!): Post!
+  deletePost(input: DeletePostInput!): Post!
+}
+
+input CreatePostInput {
+  title: String!
+  content: String!
+}
+
+input UpdatePostInput {
+  id: Int!
+  title: String!
+  content: String!
+}
+
+input DeletePostInput {
+  id: Int!
 }

@@ -15,3 +15,33 @@ export const GET_POSTS = gql`
         }
     }
 `;
+
+export const CREATE_POST = gql`
+    mutation CreatePost($title: String!, $content: String!) {
+        createPost(title: $title, content: $content) {
+            id
+            title
+            content
+            created_at
+        }
+    }
+`;
+
+export const DELETE_POST = gql`
+    mutation DeletePost($id: Float!) {
+        deletePost(id: $id) {
+            id
+        }
+    }
+`;
+
+export const UPDATE_POST = gql`
+    mutation UpdatePost($id: Int!, $title: String!, $content: String!) {
+        updatePost(id: $id, title: $title, content: $content) {
+            id
+            title
+            content
+            created_at
+        }
+    }
+`;
