@@ -17,8 +17,8 @@ export const GET_POSTS = gql`
 `;
 
 export const CREATE_POST = gql`
-    mutation CreatePost($title: String!, $content: String!) {
-        createPost(title: $title, content: $content) {
+    mutation CreatePost($input: CreatePostInput!) {
+        createPost(input: $input) {
             id
             title
             content
@@ -28,7 +28,7 @@ export const CREATE_POST = gql`
 `;
 
 export const DELETE_POST = gql`
-    mutation DeletePost($id: Float!) {
+    mutation DeletePost($id: Int!) {
         deletePost(id: $id) {
             id
         }
@@ -36,8 +36,8 @@ export const DELETE_POST = gql`
 `;
 
 export const UPDATE_POST = gql`
-    mutation UpdatePost($id: Int!, $title: String!, $content: String!) {
-        updatePost(id: $id, title: $title, content: $content) {
+    mutation UpdatePost($input: UpdatePostInput!) {
+        updatePost(input: $input) {
             id
             title
             content

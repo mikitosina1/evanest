@@ -19,7 +19,6 @@ function App() {
     e.preventDefault();
     if (!title || !content) return;
 
-    // Создание нового поста с использованием DTO CreatePostInput
     await createPost({
       variables: {
         input: {
@@ -44,7 +43,6 @@ function App() {
 
   const handleUpdatePost = async () => {
     if (editingPostId && editingTitle && editingContent) {
-      // Обновление поста с использованием DTO UpdatePostInput
       await updatePost({
         variables: {
           input: {
@@ -108,8 +106,8 @@ function App() {
               <>
                 <h2 className="post-title">{post.title}</h2>
                 <small className="post-date">{new Date(post.created_at).toLocaleString()}</small>
-                <button onClick={() => handleDeletePost(post.id)} className="delete-button">Delete</button>
                 <button onClick={() => handleEditPost(post)} className="edit-button">Edit</button>
+                <button onClick={() => handleDeletePost(post.id)} className="delete-button">Delete</button>
               </>
             )}
           </div>
