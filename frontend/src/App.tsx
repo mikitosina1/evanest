@@ -32,7 +32,7 @@ function App() {
   };
 
   const handleDeletePost = async (id: number) => {
-    await deletePost({ variables: { id } });
+    await deletePost({ variables: { input: { id } } });
   };
 
   const handleEditPost = (post: { id: number; title: string; content: string }) => {

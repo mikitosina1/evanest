@@ -28,8 +28,8 @@ export const CREATE_POST = gql`
 `;
 
 export const DELETE_POST = gql`
-    mutation DeletePost($id: Int!) {
-        deletePost(id: $id) {
+    mutation DeletePost($input: DeletePostInput!) {
+        deletePost(input: $input) {
             id
         }
     }
