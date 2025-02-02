@@ -22,7 +22,7 @@ type Query {
 type Mutation {
   createPost(input: CreatePostInput!): Post!
   updatePost(input: UpdatePostInput!): Post!
-  deletePost(input: DeletePostInput!): Post
+  deletePost(input: DeletePostInput!): Boolean
 }
 
 input CreatePostInput {

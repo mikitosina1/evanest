@@ -24,7 +24,7 @@ export class PostsResolver {
     return this.postsService.update(input.id, input);
   }
 
-  @Mutation(() => Post, { nullable: true })
+  @Mutation(() => Boolean, { nullable: true })
   async deletePost(@Args('input') input: DeletePostInput): Promise<boolean> {
     return this.postsService.remove(input);
   }
